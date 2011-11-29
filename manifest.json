@@ -3,14 +3,13 @@
   "description": "Host Home Poker Tournaments",
   "version": "1",
   "app": {
-    "urls": [
-      "*://goodoldfashioned.com/PokerClock/"
-    ],
+    
     "launch": {
-      "web_url": "http://goodoldfashioned.com/PokerClock/"
+      "local_path": "index.html"
     }
   },
   "icons": {
+	"16": "img/icon_16.png",
     "128": "img/icon_128.png"
   },
   "permissions": [
