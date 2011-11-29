@@ -456,16 +456,6 @@ var pokerClock = {
 	[ 
 		//begin structure
 		{	
-			structureName : 'Empty Structure',
-			rounds : [
-			
-				{minutes: 0, small: 0, big: 0, ante: 0},
-			
-			]
-		},
-		//end structure
-		//begin structure
-		{	
 			structureName : 'Sit & Go without antes - 1,500 chips',
 			rounds : 
 			[
@@ -653,6 +643,16 @@ var pokerClock = {
 			]
 
 		},
+		//begin structure
+		{	
+			structureName : 'Empty Structure',
+			rounds : [
+			
+				{minutes: 0, small: 0, big: 0, ante: 0},
+			
+			]
+		},
+		//end structure
 	],
 	payStructures :
 	[	
