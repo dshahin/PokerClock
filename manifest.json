@@ -1,0 +1,20 @@
+{
+  "name": "Poker Clock",
+  "description": "Host Home Poker Tournaments",
+  "version": "1",
+  "app": {
+    "urls": [
+      "*://danshahin.com/dev/pokerclock/"
+    ],
+    "launch": {
+      "web_url": "http://danshahin.com/dev/pokerclock/"
+    }
+  },
+  "icons": {
+    "128": "img/icon_128.png"
+  },
+  "permissions": [
+    "unlimitedStorage",
+    "notifications"
+  ]
+}

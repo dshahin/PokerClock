@@ -1,0 +1,141 @@
+
+input.text {
+	width:100%;
+	text-align:center;
+}
+input.buyin {
+	width:100px;
+	text-align:center;
+}
+input.numPlayers {
+	width:45px;
+	text-align:center;
+}
+input.payouts, .poPercent, .poDollars{
+	width:50px;
+	text-align:center;
+}
+input.playerName {
+	width:100%;
+	text-align:right;
+}
+input.current {
+	background-color : lightGreen;
+}
+input.winner {
+	background-color : lightGreen;
+}
+input.over {
+	background-color : pink;
+}
+input.under {
+	background-color : lightBlue;
+}
+	color:black;
+}
+th {
+	font-size:12;
+}
+table { 
+	font-size:inherit; 
+	font-size:100%;
+	border-collapse:separate;
+	border-width:4px; 
+	border-color:white; 
+	border-style:solid;
+	border-spacing:0;
+}
+table.payouts {
+	align:left;
+}
+table.rounds {
+	text-align:center;
+	border-width:50%;
+}
+.past {
+	border:solid 1px lightGray;
+	background-color:lightGray;  
+}
+td.current {
+	border:solid 1px red;
+	background-color:lightGreen;  
+}
+td.payout {
+	text-align:center;
+	text-vertical-align:bottom;
+	background-color:white;  
+}
+td.player {
+	text-align:center;
+	text-vertical-align:bottom;
+	background-color:white;  
+}
+div.controls {
+	text-align:center;
+}
+#events {
+}
+tr.rounds {
+	background-color:#B5CFE0;  
+}
+td.rounds {
+	border:solid 0px blue;
+	text-align:center;
+}
+#sidebar {
+	text-align:center;	
+}
+td,th {
+	background-color:white;  
+}
+
+td.clockTD {
+	background-color:white;  
+	width:75%;
+}
+div.pageHeader {
+ 	font-size:40px;
+	color:white;
+	background-color:black;
+	line-height:100%;
+	text-align:center;
+}
+div.status {
+	text-align:left;
+	background-color:lightgray;
+}
+div.label {
+ 	font-size:40px;
+	line-height:100%;
+	text-align:left;
+}
+div#playerInfo {
+	text-align:left;
+}
+div.timeLeft {
+ 	font-size:300px;
+	line-height:100%;
+	text-align:center;
+}
+div#roundInfo{
+	text-align:center;
+ 	font-size:150px;
+	line-height:100%;
+}
+div#stats{
+	text-align:center;
+	font-size:24px;
+}
+div#next{
+	text-align:center;
+	font-size:50px;
+}
+.paused {
+	color:gray;
+}
+
+.ko 
+{
+	text-decoration: line-through;
+	background-color: lightGray;
+}
