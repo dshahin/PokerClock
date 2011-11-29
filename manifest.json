@@ -4,10 +4,10 @@
   "version": "1",
   "app": {
     "urls": [
-      "*://danshahin.com/dev/pokerclock/"
+      "*://goodoldfashioned.com/PokerClock/"
     ],
     "launch": {
-      "web_url": "http://danshahin.com/dev/pokerclock/"
+      "web_url": "http://goodoldfashioned.com/PokerClock/"
     }
   },
   "icons": {
