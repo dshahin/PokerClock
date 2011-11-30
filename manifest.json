@@ -1,7 +1,7 @@
 {
   "name": "Poker Clock",
   "description": "Host Home Poker Tournaments",
-  "version": "2",
+  "version": "5",
   "app": {
     
     "launch": {

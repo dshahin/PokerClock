@@ -245,7 +245,7 @@ var pokerClock = {
 	showCountdown : function(){
 		var hours, minutes, seconds;
 		pokerClock.secondsLeft --;
-		if (pokerClock.secondsLeft < 1){
+		if (pokerClock.secondsLeft < 1 ){
 			pokerClock.endLevel();
 		}
 		hours = parseInt(pokerClock.secondsLeft / 3600);
