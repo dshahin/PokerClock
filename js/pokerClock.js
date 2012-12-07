@@ -1,4 +1,4 @@
-$(function(){ pokerClock.init(); });
+$(function () { pokerClock.init(); });
 
 var pokerClock = {
 	init : function(){

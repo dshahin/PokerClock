@@ -1,142 +1,174 @@
+.text {
+width:100%;
+text-align:center
+}
 
-input.text {
-	width:100%;
-	text-align:center;
+.buyin {
+width:100px;
+text-align:center
 }
-input.buyin {
-	width:100px;
-	text-align:center;
+
+.numPlayers {
+width:45px;
+text-align:center
 }
-input.numPlayers {
-	width:45px;
-	text-align:center;
+
+input.payouts,.poPercent,.poDollars {
+width:50px;
+text-align:center
 }
-input.payouts, .poPercent, .poDollars{
-	width:50px;
-	text-align:center;
+
+.playerName {
+width:100%;
+text-align:right
 }
-input.playerName {
-	width:100%;
-	text-align:right;
-}
+
 input.current {
-	background-color : lightGreen;
+background-color:#90ee90
 }
-input.winner {
-	background-color : lightGreen;
+
+.winner {
+background-color:#90ee90
 }
-input.over {
-	background-color : pink;
+
+.over {
+background-color:#ffc0cb
 }
-input.under {
-	background-color : lightBlue;
+
+.under {
+background-color:#add8e6
 }
-	color:black;
-}
+
+
 th {
-	font-size:12;
+font-size:12px
 }
-table { 
-	font-size:inherit; 
-	font-size:100%;
-	border-collapse:separate;
-	border-width:4px; 
-	border-color:white; 
-	border-style:solid;
-	border-spacing:0;
+
+table {
+font-size:inherit;
+font-size:100%;
+border-collapse:separate;
+border-width:4px;
+border-color:#fff;
+border-style:solid;
+border-spacing:0
 }
+
 table.payouts {
-	align:left;
+align:left
 }
+
 table.rounds {
-	text-align:center;
-	border-width:50%;
+text-align:center;
+border-width:50%;
 }
+
 .past {
-	border:solid 1px lightGray;
-	background-color:lightGray;  
+border:solid 1px lightGray;
+background-color:lightGray
 }
+
 td.current {
-	border:solid 1px red;
-	background-color:lightGreen;  
+border:solid 1px red;
+background-color:#90ee90
 }
-td.payout {
-	text-align:center;
-	text-vertical-align:bottom;
-	background-color:white;  
+
+.payout {
+text-align:center;
+valign:bottom;
+background-color:#fff
 }
-td.player {
-	text-align:center;
-	text-vertical-align:bottom;
-	background-color:white;  
+
+.player {
+text-align:center;
+text-vertical-align:bottom;
+background-color:#fff
 }
+
 div.controls {
-	text-align:center;
+text-align:center
 }
+
 #events {
 }
+
 tr.rounds {
-	background-color:#B5CFE0;  
+background-color:#B5CFE0
 }
+
 td.rounds {
-	border:solid 0px blue;
-	text-align:center;
+border:solid 0 blue;
+text-align:center
 }
+
 #sidebar {
-	text-align:center;	
+text-align:center
 }
+
 td,th {
-	background-color:white;  
+background-color:#fff
 }
 
 td.clockTD {
-	background-color:white;  
-	width:75%;
-}
-div.pageHeader {
- 	font-size:40px;
-	color:white;
-	background-color:black;
-	line-height:100%;
-	text-align:center;
-}
-div.status {
-	text-align:left;
-	background-color:lightgray;
-}
-div.label {
- 	font-size:40px;
-	line-height:100%;
-	text-align:left;
-}
-div#playerInfo {
-	text-align:left;
-}
-div.timeLeft {
- 	font-size:300px;
-	line-height:100%;
-	text-align:center;
-}
-div#roundInfo{
-	text-align:center;
- 	font-size:150px;
-	line-height:100%;
-}
-div#stats{
-	text-align:center;
-	font-size:24px;
-}
-div#next{
-	text-align:center;
-	font-size:50px;
-}
-.paused {
-	color:gray;
+background-color:#fff;
+width:75%
 }
 
-.ko 
-{
-	text-decoration: line-through;
-	background-color: lightGray;
+div.pageHeader {
+font-size:40px;
+color:#fff;
+background-color:#000;
+line-height:100%;
+text-align:center
 }
-#about{padding-left: 5em;padding-right: 10em;}
+
+div.status {
+text-align:left;
+background-color:lightgray
+}
+
+div.label {
+font-size:40px;
+line-height:100%;
+text-align:left
+}
+
+div#playerInfo {
+text-align:left
+}
+
+div.timeLeft {
+font-size:300px;
+line-height:100%;
+text-align:center
+}
+
+div#roundInfo {
+text-align:center;
+font-size:150px;
+line-height:100%
+}
+
+div#stats {
+text-align:center;
+font-size:24px
+}
+
+div#next {
+text-align:center;
+font-size:50px
+}
+
+.paused {
+color:gray
+}
+
+.ko {
+text-decoration:line-through;
+background-color:lightGray
+}
+
+#about {
+padding-left:5em;
+padding-right:10em
+}
