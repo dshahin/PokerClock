@@ -41,20 +41,20 @@ var pokerClock = {
 						});
 		
 		$(".delRound").live('click', function(){
-			if(confirm('really delete round?')){
-				$(this).parent().parent().remove();
-				if (pokerClock.currentRound >  pokerClock.rounds.length - 2){
-					pokerClock.currentRound = pokerClock.rounds.length - 2;
-				}
-				pokerClock.updateRounds();
+			
+			$(this).parent().parent().remove();
+			if (pokerClock.currentRound >  pokerClock.rounds.length - 2){
+				pokerClock.currentRound = pokerClock.rounds.length - 2;
 			}
+			pokerClock.updateRounds();
+			
 		});
 		$(".delPlayer").live('click', function(){
-			if(confirm('really delete player?')){
-				$(this).parent().parent().parent().parent().parent().parent().remove();
-				pokerClock.updatePlayers();
-				pokerClock.randomizeSeats();
-			}
+			
+			$(this).parent().parent().parent().parent().parent().parent().remove();
+			pokerClock.updatePlayers();
+			pokerClock.randomizeSeats();
+			
 		});
 		$("#allowRebuys").change(
 			function(){
