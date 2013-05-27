@@ -1,9 +1,14 @@
 {
   "name": "Poker Clock",
   "description": "Host Home Poker Tournaments",
-  "version": "6",
+  "version": "7.0",
+  "manifest_version" : 2,
   "app": {
     
+    "background": {
+         "scripts": ["js/background.js"]
+    },
+
     "launch": {
       "local_path": "index.html"
     }

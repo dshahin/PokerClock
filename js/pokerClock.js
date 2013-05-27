@@ -108,8 +108,7 @@ var pokerClock = {
 		pokerClock.loadPayStructure(0);
 
 		$("#payouts input.poPercent").live('change', pokerClock.calculatePayoutDollars).change();
-		$("#players").tablesorter();
-		$('#switcher').themeswitcher();
+		//$("#players").tablesorter();
 		$( "#tabs" ).tabs();
 
 		$('button').live('mouseover',function(){
@@ -127,8 +126,8 @@ var pokerClock = {
 	cfg : {
 		debug: false
 	},
-	warning : new Audio("snd/flint.wav"),
-	pop : new Audio("snd/pop.wav"),
+	warning : new Audio("/snd/flint.wav"),
+	pop : new Audio("/snd/pop.wav"),
 	currentRound : 0,
 	nextRound : function(){
 		this.currentRound++;
@@ -150,12 +149,12 @@ var pokerClock = {
 	},
 	countdownInterval : 0,
 	startClock : function(){
-		pokerClock.timeInterval = setInterval( "pokerClock.showTime()", 1000);
+		pokerClock.timeInterval = setInterval( function(){pokerClock.showTime()}, 1000);
 		$(".timeLeft").removeClass('paused');
 		$(this).html('pause');
 	},
 	startCountdown : function(){
-		pokerClock.countdownInterval = setInterval( "pokerClock.showCountdown()", 1000);
+		pokerClock.countdownInterval = setInterval( function(){pokerClock.showCountdown()}, 1000);
 		$(".timeLeft").removeClass('paused');
 		$(this).html('pause clock').attr({'title':'pause clock'});
 		pokerClock.logEvent('clock unpaused');
