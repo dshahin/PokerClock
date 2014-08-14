@@ -2,19 +2,74 @@ $(function () { pokerClock.init(); });
 
 var pokerClock = {
 	init : function(){
-		this.startClock();
-		
+		//this.startClock();
+		chrome.tts.speak('Shall we play a game?', {'enqueue': true});
 		$("#playersBox").dialog({ autoOpen: false, modal: true, width:800, height:600, show: 'blind', hide: 'blind'});
-		$("#structureBox").dialog({ autoOpen: false, modal: true, width:800, height:600 });
-		$("#payoutsBox").dialog({ autoOpen: false, modal: true, width:600, height:400 });
-		$("#playersButton").button().click(function(){
-			$("#playersBox").dialog('open');
+
+		$('#importStructure').button().click(function(){
+			var roundsString = $('#roundEntry').val();
+			var rounds = roundsString.split(/\n/);
+			console.log(rounds);
+			for(var i=0, len=rounds.length; i<len; i++){
+				var round = rounds[i];
+				var fields = round.split(/\s+/);
+				console.log(fields);
+				var newRound = {
+				    minutes:fields[4],
+				    small: fields[1],
+				    big: fields[2],
+				    ante: fields[3],
+				};
+
+				pokerClock.rounds.push(newRound);
+			}
+			console.log(pokerClock.rounds);
+			pokerClock.showRounds();
 		});
-		$("#structureButton").button().click(function(){
-			$("#structureBox").dialog('open');
+
+
+		$("#alertBox").dialog({ autoOpen: false, modal: true, width:300, height:200, show: 'blind', hide: 'blind'});
+
+		$("#importStructureDialog").dialog({
+			autoOpen: false,
+			modal: true,
+			width:400,
+			height:300,
+			show: 'blind',
+			hide: 'blind',
+			buttons: {
+		        "Import": function() {
+		        	var roundsString = $('#roundEntry').val();
+					var rounds = roundsString.split(/\n/);
+					console.log(rounds);
+					pokerClock.rounds = [];
+					for(var i=0, len=rounds.length; i<len; i++){
+						var round = rounds[i];
+
+						var fields = round.split(/\s+/);
+						console.log(fields);
+						var newRound = {
+						    minutes: parseInt(fields[4].replace('$','')),
+						    small: parseInt(fields[1].replace('$','')),
+						    big: parseInt(fields[2].replace('$','')),
+						    ante: parseInt(fields[3].replace('$','')),
+						};
+
+						pokerClock.rounds.push(newRound);
+					}
+					console.log(pokerClock.rounds);
+					pokerClock.showRounds();
+
+		          	$( this ).dialog( "close" );
+		        },
+		        Cancel: function() {
+		          $( this ).dialog( "close" );
+		        }
+	      	}
 		});
-		$("#payoutsButton").button().click(function(){
-			$("#payoutsBox").dialog('open');
+
+		$('#addStructure').button().click(function(){
+			$("#importStructureDialog").dialog('open')
 		});
 		$("#pauseButton").toggle(pokerClock.pauseCountdown, pokerClock.startCountdown).click();
 		$("#soundButton").toggle(pokerClock.muteOn,pokerClock.muteOff).css({color:'green'});
@@ -25,7 +80,9 @@ var pokerClock = {
 						.attr({title:'restart current round'});
 		$(".nextRound").attr({title:'next round'})
 					   .bind('click', function(){
+			$('.timeLeft').removeClass('warning');
 			if (pokerClock.currentRound < pokerClock.rounds.length - 1){
+				if(!pokerClock.mute){pokerClock.pop.play()};
 				pokerClock.currentRound++;
 				pokerClock.startRound(pokerClock.currentRound) ;
 				pokerClock.showRounds();
@@ -34,27 +91,28 @@ var pokerClock = {
 		$(".prevRound").attr({title:'previous round'})
 					   .bind('click', function(){
 							if (pokerClock.currentRound > 0){
+								if(!pokerClock.mute){pokerClock.pop.play()};
 								pokerClock.currentRound--;
 								pokerClock.startRound(pokerClock.currentRound) ;
 								pokerClock.showRounds();
 							}
 						});
-		
+
 		$(".delRound").live('click', function(){
-			
+
 			$(this).parent().parent().remove();
 			if (pokerClock.currentRound >  pokerClock.rounds.length - 2){
 				pokerClock.currentRound = pokerClock.rounds.length - 2;
 			}
 			pokerClock.updateRounds();
-			
+
 		});
 		$(".delPlayer").live('click', function(){
-			
+
 			$(this).parent().parent().parent().parent().parent().parent().remove();
 			pokerClock.updatePlayers();
 			pokerClock.randomizeSeats();
-			
+
 		});
 		$("#allowRebuys").change(
 			function(){
@@ -86,10 +144,10 @@ var pokerClock = {
 			if (activePlayers == 1){
 				$("tr.player").not("tr.ko").find("input").addClass('winner');
 				var winner = $("tr.player").not("tr.ko").find("input").val();
-				alert(winner + ' has won the tournament!');
+				pokerClock.alertPlayers(winner + ' has won the tournament!');
 				pokerClock.logEvent(winner + ' has won the tournament!');
 			}
-			
+
 		});
 		$("#structure").change(function(){
 			pokerClock.loadStructure($(this).val());
@@ -120,7 +178,35 @@ var pokerClock = {
 		}).live('mouseout',function(){
 			$(this).removeClass('ui-state-active');
 		});
-		//$(".controls").buttonset();
+
+		//bind keystrokes
+		$(document).bind('keydown', bindKeys);
+
+		$('#roundEntry').bind('focus', function(){
+			$(document).unbind('keydown');
+		});
+
+		$('#roundEntry').bind('blur', function(){
+			$(document).bind('keydown', bindKeys);
+		});
+
+		function bindKeys(e){
+			var key = e.keyCode;
+			console.log('key', key);
+			if(key === 32){
+				//e.preventDefault();
+				$('#pauseButton').click();
+				return true;
+			} else if (key === 37){
+				e.preventDefault();
+				$('#prevRound').click();
+			} else if (key === 39){
+				e.preventDefault();
+				$('#nextRound').click();
+			}else{
+				return true;
+			}
+		}
 
 	},
 	cfg : {
@@ -128,20 +214,28 @@ var pokerClock = {
 	},
 	warning : new Audio("/snd/flint.wav"),
 	pop : new Audio("/snd/pop.wav"),
+	alert : new Audio("/snd/alert.wav"),
 	currentRound : 0,
 	nextRound : function(){
+
 		this.currentRound++;
 		return this.currentRound;
+	},
+	alertPlayers :function(msg){
+		$("#alertBox").html(msg).dialog('open');
 	},
 	mute : false,
 	muteOn : function(){
 		pokerClock.mute = true;
+		chrome.tts.stop();
 		$("#soundButton").css({color:'red'}).attr({title:'sound disabled'});
+
 	},
 	muteOff : function(){
 		pokerClock.mute = false;
 		pokerClock.pop.play();
 		$("#soundButton").css({color:'green'}).attr({title:'sound enabled'});
+
 	},
 	timeInterval : 0,
 	logEvent : function(msg){
@@ -154,12 +248,21 @@ var pokerClock = {
 		$(this).html('pause');
 	},
 	startCountdown : function(){
+		if(!pokerClock.mute){
+			pokerClock.pop.play();
+			chrome.tts.speak('Clock running.', {'enqueue': true})
+		};
 		pokerClock.countdownInterval = setInterval( function(){pokerClock.showCountdown()}, 1000);
 		$(".timeLeft").removeClass('paused');
 		$(this).html('pause clock').attr({'title':'pause clock'});
 		pokerClock.logEvent('clock unpaused');
 	},
 	pauseCountdown : function(){
+
+		if(!pokerClock.mute){
+			pokerClock.pop.play();
+			chrome.tts.speak('Clock paused.', {'enqueue': true})
+		};
 		pokerClock.logEvent('clock paused');
 		clearInterval(pokerClock.countdownInterval);
 		$(".timeLeft").addClass('paused');
@@ -191,7 +294,7 @@ var pokerClock = {
 			var lastRound = pokerClock.rounds[pokerClock.rounds.length - 1];
 			newRound = {
 				minutes:lastRound.minutes,
-				small: (lastRound.big ),
+				small: (lastRound.little ),
 				big: (lastRound.big * 2),
 				ante: (lastRound.ante ),
 			};
@@ -204,6 +307,21 @@ var pokerClock = {
 	startRound : function(roundIndex){
 		var round = pokerClock.rounds[roundIndex];
 		var nextRound = pokerClock.rounds[roundIndex + 1];
+		if(!pokerClock.mute){
+
+			if(round.small > 0 && round.big > 0){
+
+				chrome.tts.speak('Blinds are ' +round.small +' dollar small blind. And '+ round.big + ' dollar big blind.', {'enqueue': false});
+
+				if(round.ante > 0 ){
+					chrome.tts.speak('There is a '+ round.ante + ' dollar ante.', {'enqueue': true});
+				}
+				chrome.tts.speak('Shuffle up and deal!', {'enqueue': true})
+			}else{
+				chrome.tts.speak('Break time for ' + round.minutes + 'minutes.');
+			}
+
+		}
 		pokerClock.secondsLeft = (round.minutes * 60) ;
 		$("#roundInfo").html(round.small + '/' + round.big);
 		if(round.ante > 0){ $("#roundInfo").append('(' + round.ante +')'); }
@@ -214,6 +332,7 @@ var pokerClock = {
 			if(nextRound.ante > 0){ $("#next").append('(' + nextRound.ante +')'); }
 			if(nextRound.small == 0 && nextRound.big == 0 && nextRound.ante == 0){ $("#next").html('next round: on break'); }
 		}
+		$('.timeLeft').effect('shake', {}, 100);
 	},
 	showRounds : function(){
 		$("#rounds tr.rounds").remove();
@@ -234,12 +353,13 @@ var pokerClock = {
 	secondsLeft : 65,
 	setCountdown: function(){
 		pokerClock.secondsLeft = minutes * 60;
-		
+
 	},
 	endLevel : function(){
-		if(!pokerClock.mute){pokerClock.warning.play()};
+
 		$('.timeLeft').effect('pulsate',{times:8},'slow');
 		$("#nextRound").click();
+		$('.timeLeft').removeClass('warning');
 	},
 	showCountdown : function(){
 		var hours, minutes, seconds;
@@ -252,13 +372,35 @@ var pokerClock = {
 		if (timeLeft){
 			minutes = parseInt(timeLeft  /  60);
 			timeLeft = parseInt(timeLeft %  60);
+
+			if(minutes === 1 && timeLeft == 0){
+				if(!pokerClock.mute){
+					pokerClock.alert.play();
+					setTimeout(function(){
+						chrome.tts.speak('One minute left in round');
+					}, 3000);
+				};
+				$('.timeLeft').effect('pulsate',{times:8},'slow').addClass('warning');
+			}
+
 			if (minutes < 10){ minutes = "0" + minutes; }
 		}
 		seconds = timeLeft;
+
+		if(hours == 0 & minutes == 0 &seconds == 3){
+			if(!pokerClock.mute){pokerClock.warning.play()};
+		}
+
+
+		if(seconds < 0 ){
+			seconds = 0;
+			clearInterval(pokerClock.countdownInterval);
+		}
 		if (seconds < 10){ seconds = "0" + seconds; }
 		if (! minutes){minutes = "00"; };
 		$("div.timeLeft").html(hours +':'+minutes + ':' + seconds);
-		$("#tabs li:nth-child(2) a").html(hours +':'+minutes + ':' + seconds);
+		$("#tabs li:nth-child(1) a").html(hours +':'+minutes + ':' + seconds);
+
 	},
 	getTime : function(){
 		var clock = new Date();
@@ -307,12 +449,12 @@ var pokerClock = {
 		var numPlayers = pokerClock.players.length;
 		var rowString;
 		for(var i in pokerClock.players){
-			if (pokerClock.players[i].ko == true){
+			if (pokerClock.players[i].ko === true){
 				rowString = '<tr class="player ko ">';
 			}else{
 				rowString = '<tr class="player">';
 			}
-			var rowString = 
+			var rowString =
 					rowString +
 					'<td class="player seat">'+pokerClock.players[i].seat +'</td>' +
 					'<td><input class="player playerName" type="text" value="'+ pokerClock.players[i].name + '"></input></td>'+
@@ -329,7 +471,7 @@ var pokerClock = {
 					'</td>'+
 				'</tr>';
 			$("#players").append(rowString);
-			if(pokerClock.players[i].ko == true){
+			if(pokerClock.players[i].ko === true){
 				$("#players tbody tr.ko").find("input").addClass('ko');
 			}
 			totalBuyIn += parseInt(pokerClock.players[i].buyIn );
@@ -433,7 +575,7 @@ var pokerClock = {
 		pokerClock.showPayouts();
 		pokerClock.showRounds();
 	},
-		
+
 	loadPayStructure : function(sIndex) {
 		pokerClock.payouts = pokerClock.payStructures[sIndex].payouts;
 		 //	alert(sIndex);
@@ -451,12 +593,12 @@ var pokerClock = {
 			$("#structure").append(optString);
 		}
 	},
-	structures : 
-	[ 
+	structures :
+	[
 		//begin structure
-		{	
+		{
 			structureName : 'Sit & Go without antes - 1,500 chips',
-			rounds : 
+			rounds :
 			[
 				{minutes: 10, small: 10, big: 20, ante: 0},
 				{minutes: 10, small: 15, big: 30, ante: 0},
@@ -482,9 +624,9 @@ var pokerClock = {
 			]
 		},
 		//begin structure
-		{	
+		{
 			structureName : 'Sit & Go with antes - 1,500 chips',
-			rounds : 
+			rounds :
 			[
 				{minutes: 10, small: 10, big: 20, ante: 0},
 				{minutes: 10, small: 15, big: 30, ante: 0},
@@ -508,9 +650,9 @@ var pokerClock = {
 			]
 		},
 		//begin structure
-		{	
+		{
 			structureName : 'Home Game Standard with antes',
-			rounds : 
+			rounds :
 			[
 				{minutes: 20, small: 25, big: 25, ante: 0},
 				{minutes: 20, small: 25, big: 50, ante: 0},
@@ -541,9 +683,9 @@ var pokerClock = {
 			]
 		},
 		//begin structure
-		{	
+		{
 			structureName : 'Home Game Standard without antes',
-			rounds : 
+			rounds :
 			[
 				{minutes: 20, small: 25, big: 25, ante: 0},
 				{minutes: 20, small: 25, big: 50, ante: 0},
@@ -574,9 +716,9 @@ var pokerClock = {
 			]
 		},
 		//Begin structure
-		{	
+		{
 			structureName : 'Professional with antes',
-			rounds : 
+			rounds :
 			[
 				{minutes: 30, small: 25, big: 50, ante: 0},
 				{minutes: 30, small: 50, big: 100, ante: 0},
@@ -608,9 +750,9 @@ var pokerClock = {
 			]
 		},
 		//Begin structure
-		{	
+		{
 			structureName : 'Professional without antes',
-			rounds : 
+			rounds :
 			[
 				{minutes: 30, small: 25, big: 50, ante: 0},
 				{minutes: 30, small: 50, big: 100, ante: 0},
@@ -643,100 +785,100 @@ var pokerClock = {
 
 		},
 		//begin structure
-		{	
+		{
 			structureName : 'Empty Structure',
 			rounds : [
-			
+
 				{minutes: 0, small: 0, big: 0, ante: 0},
-			
+
 			]
 		},
 		//end structure
 	],
 	payStructures :
-	[	
-		{	
+	[
+		{
 			name: 'Pay 2',
 			payouts: [
-				{percent:65, dollars: 0}, 
-				{percent:35, dollars: 0}, 
+				{percent:65, dollars: 0},
+				{percent:35, dollars: 0},
 			]
 		},
-		{	
+		{
 			name: 'Pay 3',
 			payouts: [
-				{percent:50, dollars: 0}, 
-				{percent:30, dollars: 0}, 
-				{percent:20, dollars: 0}, 
+				{percent:50, dollars: 0},
+				{percent:30, dollars: 0},
+				{percent:20, dollars: 0},
 			]
 		},
-		{	
+		{
 			name: 'Pay 4',
 			payouts: [
-				{percent:45, dollars: 0}, 
-				{percent:25, dollars: 0}, 
-				{percent:18, dollars: 0}, 
-				{percent:12, dollars: 0}, 
+				{percent:45, dollars: 0},
+				{percent:25, dollars: 0},
+				{percent:18, dollars: 0},
+				{percent:12, dollars: 0},
 			]
 		},
-		{	
+		{
 			name: 'Pay 5',
 			payouts: [
-				{percent:40, dollars: 0}, 
-				{percent:23, dollars: 0}, 
-				{percent:16, dollars: 0}, 
-				{percent:12, dollars: 0}, 
-				{percent:9, dollars: 0}, 
+				{percent:40, dollars: 0},
+				{percent:23, dollars: 0},
+				{percent:16, dollars: 0},
+				{percent:12, dollars: 0},
+				{percent:9, dollars: 0},
 			]
 		},
-		{	
+		{
 			name: 'Pay 6',
 			payouts: [
-				{percent:38, dollars: 0}, 
-				{percent:22, dollars: 0}, 
-				{percent:15, dollars: 0}, 
-				{percent:11, dollars: 0}, 
-				{percent:8, dollars: 0}, 
-				{percent:6, dollars: 0}, 
+				{percent:38, dollars: 0},
+				{percent:22, dollars: 0},
+				{percent:15, dollars: 0},
+				{percent:11, dollars: 0},
+				{percent:8, dollars: 0},
+				{percent:6, dollars: 0},
 			]
 		},
-		{	
+		{
 			name: 'Pay 7',
 			payouts: [
-				{percent:35, dollars: 0}, 
-				{percent:21, dollars: 0}, 
-				{percent:15, dollars: 0}, 
-				{percent:11, dollars: 0}, 
-				{percent:8, dollars: 0}, 
-				{percent:6, dollars: 0}, 
-				{percent:4, dollars: 0}, 
+				{percent:35, dollars: 0},
+				{percent:21, dollars: 0},
+				{percent:15, dollars: 0},
+				{percent:11, dollars: 0},
+				{percent:8, dollars: 0},
+				{percent:6, dollars: 0},
+				{percent:4, dollars: 0},
 			]
 		},
-		{	
+		{
 			name: 'Pay 8',
 			payouts: [
-				{percent:33, dollars: 0}, 
-				{percent:20, dollars: 0}, 
-				{percent:15, dollars: 0}, 
-				{percent:11, dollars: 0}, 
-				{percent:8, dollars: 0}, 
-				{percent:6, dollars: 0}, 
-				{percent:4, dollars: 0}, 
-				{percent:3, dollars: 0}, 
+				{percent:33, dollars: 0},
+				{percent:20, dollars: 0},
+				{percent:15, dollars: 0},
+				{percent:11, dollars: 0},
+				{percent:8, dollars: 0},
+				{percent:6, dollars: 0},
+				{percent:4, dollars: 0},
+				{percent:3, dollars: 0},
 			]
 		},
-		{	
+		{
 			name: 'Pay 9',
 			payouts: [
-				{percent:32, dollars: 0}, 
-				{percent:20, dollars: 0}, 
-				{percent:14, dollars: 0}, 
-				{percent:11, dollars: 0}, 
-				{percent:8, dollars: 0}, 
-				{percent:6, dollars: 0}, 
-				{percent:4, dollars: 0}, 
-				{percent:3, dollars: 0}, 
-				{percent:2, dollars: 0}, 
+				{percent:32, dollars: 0},
+				{percent:20, dollars: 0},
+				{percent:14, dollars: 0},
+				{percent:11, dollars: 0},
+				{percent:8, dollars: 0},
+				{percent:6, dollars: 0},
+				{percent:4, dollars: 0},
+				{percent:3, dollars: 0},
+				{percent:2, dollars: 0},
 			]
 		}
 	]

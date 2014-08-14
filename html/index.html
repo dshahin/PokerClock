@@ -16,14 +16,17 @@
 	<body>
 		<div id="tabs">
 			<ul>
-				<li>
-					<a href="#about">About</a>
-				</li>
+
 				<li>
 					<a href="#clock">Clock</a>
 				</li>
+
 				<li>
-					<a href="#events">History</a>
+					<a href="#settings">Settings</a>
+				</li>
+
+				<li>
+					<a href="#about">About</a>
 				</li>
 			</ul>
 			<div id="about">
@@ -96,120 +99,60 @@
 				</ul>
 </script>
 			</div>
+			<div id="settings" >
+				<h1>Tournament Settings foo</h1>
+
+					<div id="structureBox" title="Rounds">
+				preset round structure:<select name="structure" id="structure">
+					</select>
+					<h1>
+						<button class="prevRound ui-state-default ui-corner-left">&lt;</button> <button id="addRound" class="ui-state-default">new round</button> <button class="nextRound ui-state-default ui-corner-right">&gt;</button>
+						<button id="addStructure" class="import ui-state-default ui-corner-right">add</button>
+					</h1>
+
+					<table id="rounds" class="rounds">
+						<tr>
+							<th>
+								minutes
+							</th>
+							<th>
+								small
+							</th>
+							<th>
+								big
+							</th>
+							<th>
+								ante
+							</th>
+						</tr>
+					</table>
+				</div>
+			</div>
 			<div id="clock">
 				<div class="timeLeft" id="timeLeft">
 					--:--:--
 				</div>
 				<div id="roundInfo"></div>
 				<div id="next"></div>
-				<div id="stats">
-					players left: average stack: chips<br>
-				</div>
+
 				<div class="controls">
-					<button class="prevRound ui-state-default ui-corner-left">&lt;</button> <button id="soundButton" class="ui-button ui-button-text-only ui-widget ui-state-default" title="alert on">♪</button> <button id="startRound" title="restart round" class="ui-state-default">restart</button> <button id="pauseButton" title="start clock" class="ui-state-default"></button> <button id="nextRound" class="nextRound ui-state-default ui-corner-right">&gt;</button>
-				</div><button id="playersButton">players</button> <button id="structureButton">structure</button> <button id="payoutsButton">payouts</button>
-			</div>
-			<div id="playersBox" title="Players">
-				<button id="addPlayer" class="ui-state-default">add player</button> # <input type="text" class="numPlayers" value="1"> buyin <input type="text" class="buyin" id="buyin" value="20"> chips <input type="text" class="buyin" id="chips" value="1500"><br>
-				<input type="checkbox" id="allowRebuys"> rebuys <span id="rebuyEntry" class=" extra">$<input type="text" class="buyin" id="rebuy"> chips<input type="text" class="buyin" id="rebuyChips"> max # <input type="text" class="buyin" id="rebuyChips2" value="1"></span><br>
-				<input type="checkbox" id="allowAddOn"> add-on <span id="addOnEntry" class="extra">$<input type="text" class="buyin" id="addOn"> chips<input type="text" class="buyin" id="addOnChips"></span><br>
-				<button id="randomizeSeats" class="ui-state-default" title="randomize seating">seat</button>
-				<table id="players" class="players tablesorter">
-					<thead>
-						<tr>
-							<th>
-								seat
-							</th>
-							<th>
-								player
-							</th>
-							<th>
-								buyin
-							</th>
-							<th>
-								chips
-							</th>
-							<th>
-								actions
-							</th>
-						</tr>
-					</thead>
-				</table>
-				<div id="playerInfo">
-					<table>
-						<tr>
-							<td>
-								total chips:
-							</td>
-							<td>
-								<span id="totalChips"></span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								average stack:
-							</td>
-							<td>
-								chips
-							</td>
-						</tr>
-						<tr>
-							<td>
-								total pot:
-							</td>
-							<td>
-								$<span id="pot"></span>
-							</td>
-						</tr>
-					</table>
+					<button id="prevRound" class="prevRound ui-state-default ui-corner-left">&lt;</button> <button id="soundButton" class="ui-button ui-button-text-only ui-widget ui-state-default" title="alert on">♪</button> <button id="startRound" title="restart round" class="ui-state-default">restart round</button> <button id="pauseButton" title="start clock" class="ui-state-default"></button> <button id="nextRound" class="nextRound ui-state-default ui-corner-right">&gt;</button>
 				</div>
+				<!-- <button id="playersButton">players</button> -->
+					<!-- <button id="structureButton"> structure</button> -->
+				<!-- <button id="payoutsButton">payouts</button> -->
 			</div>
-			<div id="structureBox" title="Rounds">
-				preset round structure:<select name="structure" id="structure">
-					</select>
-				<h1>
-					<button class="prevRound ui-state-default ui-corner-left">&lt;</button> <button id="addRound" class="ui-state-default">new round</button> <button class="nextRound ui-state-default ui-corner-right">&gt;</button>
-				</h1>
-				<table id="rounds" class="rounds">
-					<tr>
-						<th>
-							minutes
-						</th>
-						<th>
-							small
-						</th>
-						<th>
-							big
-						</th>
-						<th>
-							ante
-						</th>
-					</tr>
-				</table>
+
+
+			<div id="alertBox" title="Alert">
+
 			</div>
-			<div id="payoutsBox" title="Payouts">
-				preset pay structure: <select name="payStructure" id="payStructure">
-					</select>
-				<h1>
-					<button id="addPayout" class="ui-state-default" title="add payout">+</button><button id="delPayout" class="ui-state-default" title="delete payout">-</button>
-				</h1>
-				<table class="payouts" id="payouts">
-					<thead>
-						<tr>
-							<th>
-								#
-							</th>
-							<th>
-								%
-							</th>
-							<th>
-								$
-							</th>
-						</tr>
-					</thead>
-				</table>
+
+
+			<div id="importStructureDialog" style="display:none">
+				<textarea name="rounds" id="roundEntry" cols="30" rows="10"></textarea>
 			</div>
-			<div id="events">
+			<div id="events" style="display:none">>
 				<h1>
 					Tournament History
 				</h1>

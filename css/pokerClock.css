@@ -143,14 +143,14 @@ text-align:left
 }
 
 div.timeLeft {
-font-size:300px;
+font-size:25vw;
 line-height:100%;
 text-align:center
 }
 
 div#roundInfo {
 text-align:center;
-font-size:150px;
+font-size:20vw;
 line-height:100%
 }
 
@@ -176,4 +176,13 @@ background-color:lightGray
 #about {
 padding-left:5em;
 padding-right:10em
+}
+
+.warning {
+    color:red;
+}
+#roundEntry{
+    display: block;
+    height: 100%;
+    width: 100%;
 }

@@ -6,7 +6,7 @@
       try {
         throw new Error('Do not use Window.addEventListener for ' + type);
       } catch (e) {
-        //console.error(e.message, e);
+        console.error(e.message, e);
       }
     } else
       return windowAddEventListener.apply(window, arguments);
