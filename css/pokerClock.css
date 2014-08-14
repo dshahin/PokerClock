@@ -32,6 +32,11 @@ input.current {
 background-color:#90ee90
 }
 
+input.text {
+    width:20vw;
+    font-size: 2vw;
+}
+
 .winner {
 background-color:#90ee90
 }
@@ -71,6 +76,11 @@ border-width:50%;
 .past {
 border:solid 1px lightGray;
 background-color:lightGray
+}
+
+.break {
+border:solid 1px lightyellow;
+background-color:lightyellow
 }
 
 td.current {
@@ -150,7 +160,7 @@ text-align:center
 
 div#roundInfo {
 text-align:center;
-font-size:20vw;
+font-size:12vw;
 line-height:100%
 }
 
@@ -161,7 +171,7 @@ font-size:24px
 
 div#next {
 text-align:center;
-font-size:50px
+font-size:6vw;
 }
 
 .paused {
@@ -185,4 +195,8 @@ padding-right:10em
     display: block;
     height: 100%;
     width: 100%;
+    font-size: 2vw;
+}
+#clock{
+    height:100%;
 }

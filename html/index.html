@@ -22,7 +22,7 @@
 				</li>
 
 				<li>
-					<a href="#settings">Settings</a>
+					<a href="#settings">Structure</a>
 				</li>
 
 				<li>
@@ -100,15 +100,17 @@
 </script>
 			</div>
 			<div id="settings" >
-				<h1>Tournament Settings foo</h1>
 
 					<div id="structureBox" title="Rounds">
-				preset round structure:<select name="structure" id="structure">
-					</select>
+
 					<h1>
-						<button class="prevRound ui-state-default ui-corner-left">&lt;</button> <button id="addRound" class="ui-state-default">new round</button> <button class="nextRound ui-state-default ui-corner-right">&gt;</button>
-						<button id="addStructure" class="import ui-state-default ui-corner-right">add</button>
+						<button class="prevRound ui-state-default ui-corner-left">&lt;</button>
+
+						<button id="addStructure" class="import ui-state-default ui-corner-right">edit</button>
+						<button class="nextRound ui-state-default ui-corner-right">&gt;</button>
+						presets:<select name="structure" id="structure"></select>
 					</h1>
+
 
 					<table id="rounds" class="rounds">
 						<tr>
@@ -138,9 +140,7 @@
 				<div class="controls">
 					<button id="prevRound" class="prevRound ui-state-default ui-corner-left">&lt;</button> <button id="soundButton" class="ui-button ui-button-text-only ui-widget ui-state-default" title="alert on">♪</button> <button id="startRound" title="restart round" class="ui-state-default">restart round</button> <button id="pauseButton" title="start clock" class="ui-state-default"></button> <button id="nextRound" class="nextRound ui-state-default ui-corner-right">&gt;</button>
 				</div>
-				<!-- <button id="playersButton">players</button> -->
-					<!-- <button id="structureButton"> structure</button> -->
-				<!-- <button id="payoutsButton">payouts</button> -->
+
 			</div>
 
 
@@ -152,17 +152,7 @@
 			<div id="importStructureDialog" style="display:none">
 				<textarea name="rounds" id="roundEntry" cols="30" rows="10"></textarea>
 			</div>
-			<div id="events" style="display:none">>
-				<h1>
-					Tournament History
-				</h1>
-				<div id="events2">
-					<ul>
-						<li>events:
-						</li>
-					</ul>
-				</div>
-			</div>
+
 		</div><!-- End demo -->
 	</body>
 </html>

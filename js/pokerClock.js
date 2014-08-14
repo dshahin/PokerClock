@@ -2,31 +2,6 @@ $(function () { pokerClock.init(); });
 
 var pokerClock = {
 	init : function(){
-		//this.startClock();
-		chrome.tts.speak('Shall we play a game?', {'enqueue': true});
-		$("#playersBox").dialog({ autoOpen: false, modal: true, width:800, height:600, show: 'blind', hide: 'blind'});
-
-		$('#importStructure').button().click(function(){
-			var roundsString = $('#roundEntry').val();
-			var rounds = roundsString.split(/\n/);
-			console.log(rounds);
-			for(var i=0, len=rounds.length; i<len; i++){
-				var round = rounds[i];
-				var fields = round.split(/\s+/);
-				console.log(fields);
-				var newRound = {
-				    minutes:fields[4],
-				    small: fields[1],
-				    big: fields[2],
-				    ante: fields[3],
-				};
-
-				pokerClock.rounds.push(newRound);
-			}
-			console.log(pokerClock.rounds);
-			pokerClock.showRounds();
-		});
-
 
 		$("#alertBox").dialog({ autoOpen: false, modal: true, width:300, height:200, show: 'blind', hide: 'blind'});
 
@@ -34,7 +9,7 @@ var pokerClock = {
 			autoOpen: false,
 			modal: true,
 			width:400,
-			height:300,
+			height:600,
 			show: 'blind',
 			hide: 'blind',
 			buttons: {
@@ -48,19 +23,37 @@ var pokerClock = {
 
 						var fields = round.split(/\s+/);
 						console.log(fields);
-						var newRound = {
-						    minutes: parseInt(fields[4].replace('$','')),
-						    small: parseInt(fields[1].replace('$','')),
-						    big: parseInt(fields[2].replace('$','')),
-						    ante: parseInt(fields[3].replace('$','')),
-						};
-
+						for(var j=0, jlen=fields.length; j<jlen; j++){
+							var field = fields[j];
+							field = field.replace(/,/,'');
+							field = field.replace(/\$/,'');
+							fields[j] = field;
+						}
+						var newRound = {};
+						if (fields.length > 2){
+							newRound = {
+							    minutes: parseInt(fields[4]),
+							    small: parseInt(fields[1]),
+							    big: parseInt(fields[2]),
+							    ante: parseInt(fields[3]),
+							};
+						}else{
+							newRound = {
+							    minutes: parseInt(fields[1]),
+							    small: 0,
+							    big: 0,
+							    ante: 0,
+							};
+						}
 						pokerClock.rounds.push(newRound);
 					}
 					console.log(pokerClock.rounds);
 					pokerClock.showRounds();
-
+					$('#roundEntry').html('');
 		          	$( this ).dialog( "close" );
+		        },
+		        Clear:function(){
+		        	$('#roundEntry').html('');
 		        },
 		        Cancel: function() {
 		          $( this ).dialog( "close" );
@@ -69,13 +62,20 @@ var pokerClock = {
 		});
 
 		$('#addStructure').button().click(function(){
-			$("#importStructureDialog").dialog('open')
+			var formatString ='';
+			$('#roundEntry').html('');
+			for(var i=0, len=pokerClock.rounds.length; i<len; i++){
+				var round = pokerClock.rounds[i];
+				formatString += i+1 + '\t' +round.small + '\t' +round.big + '\t' + round.ante + '\t' + round.minutes + '\n';
+			}
+			$('#roundEntry').html(formatString);
+			$("#importStructureDialog").dialog('open');
 		});
 		$("#pauseButton").toggle(pokerClock.pauseCountdown, pokerClock.startCountdown).click();
 		$("#soundButton").toggle(pokerClock.muteOn,pokerClock.muteOff).css({color:'green'});
-		$("#addRound").bind('click', pokerClock.addRound);
-		$("#addPlayer").bind('click', pokerClock.addPlayer);
-		$("#randomizeSeats").bind('click', pokerClock.randomizeSeats);
+		// $("#addRound").bind('click', pokerClock.addRound);
+		// $("#addPlayer").bind('click', pokerClock.addPlayer);
+		// $("#randomizeSeats").bind('click', pokerClock.randomizeSeats);
 		$("#startRound").bind('click', function(){ pokerClock.startRound(pokerClock.currentRound) })
 						.attr({title:'restart current round'});
 		$(".nextRound").attr({title:'next round'})
@@ -98,33 +98,6 @@ var pokerClock = {
 							}
 						});
 
-		$(".delRound").live('click', function(){
-
-			$(this).parent().parent().remove();
-			if (pokerClock.currentRound >  pokerClock.rounds.length - 2){
-				pokerClock.currentRound = pokerClock.rounds.length - 2;
-			}
-			pokerClock.updateRounds();
-
-		});
-		$(".delPlayer").live('click', function(){
-
-			$(this).parent().parent().parent().parent().parent().parent().remove();
-			pokerClock.updatePlayers();
-			pokerClock.randomizeSeats();
-
-		});
-		$("#allowRebuys").change(
-			function(){
-				$("#rebuyEntry").toggle();
-			}
-		);
-		$("input:checkbox#allowAddOn").change(
-			function(){
-				$("#addOnEntry").toggle();
-			}
-		);
-
 		$(".extra").toggle(
 			function(){
 				$(this).hide();
@@ -134,29 +107,29 @@ var pokerClock = {
 			}
 		).toggle().unbind('click');
 
-		$(".koButton").live('click', function(){
-			$(this).parent().parent().parent().parent().parent().parent().toggleClass('ko').find("input").toggleClass('ko');
-			var playerName = $(this).parent().parent().parent().parent().parent().parent().find("input").val();
-			pokerClock.logEvent(playerName +' knocked out' );
+		// $(".koButton").live('click', function(){
+		// 	$(this).parent().parent().parent().parent().parent().parent().toggleClass('ko').find("input").toggleClass('ko');
+		// 	var playerName = $(this).parent().parent().parent().parent().parent().parent().find("input").val();
+		// 	pokerClock.logEvent(playerName +' knocked out' );
 
-			var activePlayers = $("tr.player").not("tr.ko").length;
-			pokerClock.updatePlayers();
-			if (activePlayers == 1){
-				$("tr.player").not("tr.ko").find("input").addClass('winner');
-				var winner = $("tr.player").not("tr.ko").find("input").val();
-				pokerClock.alertPlayers(winner + ' has won the tournament!');
-				pokerClock.logEvent(winner + ' has won the tournament!');
-			}
+		// 	var activePlayers = $("tr.player").not("tr.ko").length;
+		// 	pokerClock.updatePlayers();
+		// 	if (activePlayers == 1){
+		// 		$("tr.player").not("tr.ko").find("input").addClass('winner');
+		// 		var winner = $("tr.player").not("tr.ko").find("input").val();
+		// 		pokerClock.alertPlayers(winner + ' has won the tournament!');
+		// 		pokerClock.logEvent(winner + ' has won the tournament!');
+		// 	}
 
-		});
+		// });
 		$("#structure").change(function(){
 			pokerClock.loadStructure($(this).val());
 		});
 		$("#payStructure").change(function(){
 			pokerClock.loadPayStructure($(this).val());
 		});
-		$("#addPayout").click( pokerClock.addPayout);
-		$("#delPayout").click( pokerClock.delPayout);
+		// $("#addPayout").click( pokerClock.addPayout);
+		// $("#delPayout").click( pokerClock.delPayout);
 		$("#rounds input[type='text']").live('change', pokerClock.updateRounds);
 		$("#players input[type='text']").live('change', pokerClock.updatePlayers);
 		pokerClock.showStructures();
@@ -288,22 +261,7 @@ var pokerClock = {
 		pokerClock.showRounds();
 		$(this).select();
 	},
-	addRound : function(){
-		var newRound;
-		if(pokerClock.rounds.length > 0){
-			var lastRound = pokerClock.rounds[pokerClock.rounds.length - 1];
-			newRound = {
-				minutes:lastRound.minutes,
-				small: (lastRound.little ),
-				big: (lastRound.big * 2),
-				ante: (lastRound.ante ),
-			};
-		}else{
-			newRound=pokerClock.defaultRound;
-		}
-		pokerClock.rounds.push(newRound);
-		pokerClock.showRounds();
-	},
+
 	startRound : function(roundIndex){
 		var round = pokerClock.rounds[roundIndex];
 		var nextRound = pokerClock.rounds[roundIndex + 1];
@@ -337,18 +295,33 @@ var pokerClock = {
 	showRounds : function(){
 		$("#rounds tr.rounds").remove();
 		for (r=0; r< pokerClock.rounds.length; r++){
+
 			$("#rounds").append(
 				'<tr class="rounds">'+
-				'<td class="rounds"><input type="text" class="text minutes" value="' + pokerClock.rounds[r].minutes + '"/></td>' +
-				'<td class="rounds"><input type="text" class="text small" value="' + pokerClock.rounds[r].small + '"/></td>' +
-				'<td class="rounds"><input type="text" class="text big" value="' + pokerClock.rounds[r].big + '"/></td>' +
-				'<td class="rounds"><input type="text" class="text ante" value="' + pokerClock.rounds[r].ante + '"/></td>' +
-				'<td class="rounds"><button class="delRound ui-button ui-button-text-only ui-widget ui-state-default">x</button></td>' +
+				'<td class="rounds"><input disabled="disabled" type="text" class="text minutes" value="' + pokerClock.rounds[r].minutes + '"/></td>' +
+				'<td class="rounds small"><input disabled="disabled" type="text" class="text small" value="' + pokerClock.rounds[r].small + '"/></td>' +
+				'<td class="rounds big"><input disabled="disabled" type="text" class="text big" value="' + pokerClock.rounds[r].big + '"/></td>' +
+				'<td class="rounds"><input type="text" disabled="disabled" class="text ante" value="' + pokerClock.rounds[r].ante + '"/></td>' +
 				'</tr>'
 			);
 		}
 		$("#rounds tr").slice(1 ,pokerClock.currentRound +2).children().addClass('past').children().addClass('past');
 		$("#rounds tr").slice(pokerClock.currentRound +1 , pokerClock.currentRound +2).children().addClass('current').children().addClass('current');
+		$("tr.rounds").each(function(){
+			var $row = $(this),
+			big,small;
+			var big = $row.children('td.big').each(function(){
+				big = $(this).children('input.big').val();
+			});
+			var small = $row.children('td.small').each(function(){
+				small = $(this).children('input.small').val();
+			});
+			if(big == 0 && small == 0){
+				$row.addClass('break');
+			}
+
+
+		});
 	},
 	secondsLeft : 65,
 	setCountdown: function(){
