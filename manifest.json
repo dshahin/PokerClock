@@ -1,7 +1,7 @@
 {
   "name": "Poker Tournament Clock",
   "description": "Host Home Poker Tournaments",
-  "version": "10.2",
+  "version": "10.3",
   "manifest_version" : 2,
   "app": {
 
