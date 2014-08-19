@@ -177,7 +177,7 @@ var pokerClock = {
 	      value:1,
 	      min: 0.1,
 	      max: 4,
-	      step: 0.1,
+	      step: 0.01,
 	      slide: function( event, ui ) {
 	      	pokerClock.voiceOptions.rate = ui.value;
 	        $( "#voiceRate" ).val( ui.value );
@@ -185,6 +185,19 @@ var pokerClock = {
 	    });
 
 	    $( "#voiceRate" ).val(1);
+
+	    $('#voicePitchSlider').slider({
+	      value:1,
+	      min: 0.1,
+	      max: 2,
+	      step: 0.01,
+	      slide: function( event, ui ) {
+	      	pokerClock.voiceOptions.pitch = ui.value;
+	        $( "#voicePitch" ).val( ui.value );
+	      }
+	    });
+
+	    $( "#voicePitch" ).val(1);
 
 		$('#say').button().click(function(){
 			chrome.tts.stop();
@@ -326,10 +339,11 @@ var pokerClock = {
 
 			$("#rounds").append(
 				'<tr class="rounds">'+
-				'<td class="rounds"><input disabled="disabled" type="text" class="text minutes" value="' + pokerClock.rounds[r].minutes + '"/></td>' +
+				
 				'<td class="rounds small"><input disabled="disabled" type="text" class="text small" value="' + pokerClock.rounds[r].small + '"/></td>' +
 				'<td class="rounds big"><input disabled="disabled" type="text" class="text big" value="' + pokerClock.rounds[r].big + '"/></td>' +
 				'<td class="rounds"><input type="text" disabled="disabled" class="text ante" value="' + pokerClock.rounds[r].ante + '"/></td>' +
+				'<td class="rounds"><input disabled="disabled" type="text" class="text minutes" value="' + pokerClock.rounds[r].minutes + '"/></td>' +
 				'</tr>'
 			);
 		}

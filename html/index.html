@@ -115,23 +115,25 @@
 						presets:<select name="structure" id="structure"></select>
 					</h1>
 
-
-					<table id="rounds" class="rounds">
-						<tr>
-							<th>
-								minutes
-							</th>
-							<th>
-								small
-							</th>
-							<th>
-								big
-							</th>
-							<th>
-								ante
-							</th>
-						</tr>
-					</table>
+					<div class="roundContainer">
+						<table id="rounds" class="rounds">
+							<tr>
+								
+								<th>
+									small
+								</th>
+								<th>
+									big
+								</th>
+								<th>
+									ante
+								</th>
+								<th>
+									minutes
+								</th>
+							</tr>
+						</table>
+					</div>
 				</div>
 			</div>
 			<div id="clock">
@@ -163,6 +165,12 @@
 				<label for="voiceRate">Rate</label>
 				<input name="voiceRate" id="voiceRate" disabled="disabled" />
 				<div id="voiceRateSlider"></div> 
+
+				<br/>
+				<label for="voicePitch">Pitch</label>
+				<input name="voicePitch" id="voicePitch" disabled="disabled" />
+				<div id="voicePitchSlider"></div> 
+
 				<hr/>
 			</div>
 
