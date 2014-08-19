@@ -1,7 +1,20 @@
 $(function () { pokerClock.init(); });
 
 var pokerClock = {
+	voiceName : 'Zardox',
 	init : function(){
+		var voiceName = 'Good News';
+		chrome.tts.getVoices(
+          function(voices) {
+            for (var i = 0; i < voices.length; i++) {
+              console.log('Voice ' + i + ':');
+              console.log('  name: ' + voices[i].voiceName);
+              console.log('  lang: ' + voices[i].lang);
+              console.log('  gender: ' + voices[i].gender);
+              console.log('  extension id: ' + voices[i].extensionId);
+              console.log('  event types: ' + voices[i].eventTypes);
+            }
+          });
 
 		$("#alertBox").dialog({ autoOpen: false, modal: true, width:300, height:200, show: 'blind', hide: 'blind'});
 
@@ -133,7 +146,7 @@ var pokerClock = {
 		$("#rounds input[type='text']").live('change', pokerClock.updateRounds);
 		$("#players input[type='text']").live('change', pokerClock.updatePlayers);
 		pokerClock.showStructures();
-		pokerClock.showPayStructures();
+		//pokerClock.showPayStructures();
 		//initialize default structure
 		pokerClock.loadStructure(0);
 		pokerClock.loadPayStructure(0);
@@ -223,7 +236,7 @@ var pokerClock = {
 	startCountdown : function(){
 		if(!pokerClock.mute){
 			pokerClock.pop.play();
-			chrome.tts.speak('Clock running.', {'enqueue': true})
+			chrome.tts.speak('Clock running.', {'enqueue': true, voiceName:pokerClock.voiceName})
 		};
 		pokerClock.countdownInterval = setInterval( function(){pokerClock.showCountdown()}, 1000);
 		$(".timeLeft").removeClass('paused');
@@ -265,16 +278,17 @@ var pokerClock = {
 	startRound : function(roundIndex){
 		var round = pokerClock.rounds[roundIndex];
 		var nextRound = pokerClock.rounds[roundIndex + 1];
+
 		if(!pokerClock.mute){
 
 			if(round.small > 0 && round.big > 0){
 
-				chrome.tts.speak('Blinds are ' +round.small +' dollar small blind. And '+ round.big + ' dollar big blind.', {'enqueue': false});
+				chrome.tts.speak('Blinds are ' +round.small +' dollar small blind. And '+ round.big + ' dollar big blind.', {'enqueue': false, voiceName:pokerClock.voiceName});
 
 				if(round.ante > 0 ){
-					chrome.tts.speak('There is a '+ round.ante + ' dollar ante.', {'enqueue': true});
+					chrome.tts.speak('There is a '+ round.ante + ' dollar ante.', {'enqueue': true, voiceName:pokerClock.voiceName});
 				}
-				chrome.tts.speak('Shuffle up and deal!', {'enqueue': true})
+				chrome.tts.speak('Shuffle up and deal!', {'enqueue': true, voiceName:pokerClock.voiceName})
 			}else{
 				chrome.tts.speak('Break time for ' + round.minutes + 'minutes.');
 			}
@@ -350,7 +364,7 @@ var pokerClock = {
 				if(!pokerClock.mute){
 					pokerClock.alert.play();
 					setTimeout(function(){
-						chrome.tts.speak('One minute left in round');
+						chrome.tts.speak('One minute left in round', {voiceName:pokerClock.voiceName});
 					}, 3000);
 				};
 				$('.timeLeft').effect('pulsate',{times:8},'slow').addClass('warning');
