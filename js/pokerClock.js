@@ -16,13 +16,13 @@ var pokerClock = {
 		        "Import": function() {
 		        	var roundsString = $('#roundEntry').val();
 					var rounds = roundsString.split(/\n/);
-					console.log(rounds);
+					//console.log(rounds);
 					pokerClock.rounds = [];
 					for(var i=0, len=rounds.length; i<len; i++){
 						var round = rounds[i];
 
 						var fields = round.split(/\s+/);
-						console.log(fields);
+						//console.log(fields);
 						for(var j=0, jlen=fields.length; j<jlen; j++){
 							var field = fields[j];
 							field = field.replace(/,/,'');
