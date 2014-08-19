@@ -675,7 +675,7 @@ var pokerClock = {
 		//end structure
 		//begin structure
 		{
-			structureName : 'Humboldt $10 2000 chips',
+			structureName : 'Humboldt $10 for 2000 chips',
 			rounds : [
 
 				{minutes: 15, small: 25, big: 50, ante: 0},
@@ -693,7 +693,7 @@ var pokerClock = {
 		//end structure
 		//begin structure
 		{
-			structureName : 'Humboldt $15 3000 chips - A',
+			structureName : 'Humboldt $15 for 3000 chips - A',
 			rounds : [
 
 				{minutes: 20, small: 25, big: 50, ante: 0},
@@ -712,7 +712,7 @@ var pokerClock = {
 		//end structure
 		//begin structure
 		{
-			structureName : 'Humboldt $15 4000 chips - B',
+			structureName : 'Humboldt $15 for 4000 chips - B',
 			rounds : [
 
 				{minutes: 20, small: 25, big: 50, ante: 0},
@@ -732,7 +732,7 @@ var pokerClock = {
 		//end structure
 		//begin structure
 		{
-			structureName : 'Humboldt $20 5000 chips - A',
+			structureName : 'Humboldt $20 for 5000 chips - A',
 			rounds : [
 
 				{minutes: 20, small: 25, big: 50, ante: 0},
@@ -755,7 +755,7 @@ var pokerClock = {
 		//end structure
 		//begin structure
 		{
-			structureName : 'Humboldt $20 7500 chips - B',
+			structureName : 'Humboldt $20 for 7500 chips - B',
 			rounds : [
 
 				{minutes: 20, small: 25, big: 50, ante: 0},
@@ -779,7 +779,7 @@ var pokerClock = {
 		//end structure
 		//begin structure
 		{
-			structureName : 'Humboldt $20 / 4,500 chips - C',
+			structureName : 'Humboldt $20 for 4,500 chips - C',
 			rounds : [
 
 				{minutes: 20, small: 25, big: 50, ante: 0},
@@ -803,7 +803,7 @@ var pokerClock = {
 		//end structure
 		//begin structure
 		{
-			structureName : 'Humboldt $25 / 10000 chips',
+			structureName : 'Humboldt $25 for 10000 chips',
 			rounds : [
 
 				{minutes: 20, small: 25, big: 50, ante: 0},
