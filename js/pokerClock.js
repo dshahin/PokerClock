@@ -2,10 +2,10 @@ $(function () { pokerClock.init(); });
 
 var pokerClock = {
 	voiceOptions : {
-		voiceName : 'Zarvox',
+		voiceName : 'Alex',
 		enqueue: true,
-		pitch : 1,
-		rate : 1,
+		pitch : 0.42,
+		rate : 1.67,
 		volume: 1
 	},
 	voiceNames :['Zardoz','Agnes'],
@@ -22,7 +22,12 @@ var pokerClock = {
             for (var i = 0; i < voices.length; i++) {
               var vName = voices[i].voiceName;
               pokerClock.voiceNames.push(vName);
-              $('#voiceName').append('<option value="' + vName + '">' + vName + '</option>');
+              if(vName === pokerClock.voiceOptions.voiceName){
+              	$('#voiceName').append('<option selected="selected" value="' + vName + '">' + vName + '</option>');
+              }else{
+              	$('#voiceName').append('<option value="' + vName + '">' + vName + '</option>');
+              }
+              
             }
           });
 
@@ -169,12 +174,12 @@ var pokerClock = {
 			$(document).bind('keydown', bindKeys);
 		});
 
-		$('#voiceName').change(function(){
+		$('#voiceName').val(pokerClock.voiceOptions.voiceName).change(function(){
 			pokerClock.voiceOptions.voiceName = $(this).val();
 		});
 
 		$('#voiceRateSlider').slider({
-	      value:1,
+	      value:pokerClock.voiceOptions.rate,
 	      min: 0.1,
 	      max: 4,
 	      step: 0.01,
@@ -184,10 +189,10 @@ var pokerClock = {
 	      }
 	    });
 
-	    $( "#voiceRate" ).val(1);
+	    $( "#voiceRate" ).val(pokerClock.voiceOptions.rate);
 
 	    $('#voicePitchSlider').slider({
-	      value:1,
+	      value: pokerClock.voiceOptions.pitch,
 	      min: 0.1,
 	      max: 2,
 	      step: 0.01,
@@ -197,7 +202,7 @@ var pokerClock = {
 	      }
 	    });
 
-	    $( "#voicePitch" ).val(1);
+	    $( "#voicePitch" ).val(pokerClock.voiceOptions.pitch);
 
 		$('#say').button().click(function(){
 			chrome.tts.stop();
