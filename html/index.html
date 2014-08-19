@@ -18,20 +18,22 @@
 			<ul>
 
 				<li>
-					<a href="#clock">Clock</a>
+					<a href="#clock"><span class="ui-icon ui-icon-clock"/>Clock</a>
 				</li>
 
 				<li>
-					<a href="#struct">Structure</a>
+					<a href="#struct"><span class="ui-icon ui-icon-pencil"/></a>
 				</li>
 
 				<li>
-					<a href="#settings">Settings</a>
+					<a href="#about"><span class="ui-icon ui-icon-lightbulb"/></a>
 				</li>
 
 				<li>
-					<a href="#about">About</a>
+					<a href="#settings"><span class="ui-icon ui-icon-gear"/></a>
 				</li>
+
+
 			</ul>
 			<div id="about">
 				<h1>
@@ -118,7 +120,7 @@
 					<div class="roundContainer">
 						<table id="rounds" class="rounds">
 							<tr>
-								
+
 								<th>
 									small
 								</th>
@@ -160,16 +162,16 @@
 					<option value="Albert">Albert</option>
 					<option value="Agnes">Agnes</option>
 				</select>
-				
-				<br/>
-				<label for="voiceRate">Rate</label>
-				<input name="voiceRate" id="voiceRate" disabled="disabled" />
-				<div id="voiceRateSlider"></div> 
 
 				<br/>
-				<label for="voicePitch">Pitch</label>
+				<label id="rateLabel" for="voiceRate" title="reset">Rate</label>
+				<input name="voiceRate" id="voiceRate" disabled="disabled" />
+				<div id="voiceRateSlider"></div>
+
+				<br/>
+				<label id="pitchLabel" for="voicePitch" title="reset">Pitch</label>
 				<input name="voicePitch" id="voicePitch" disabled="disabled" />
-				<div id="voicePitchSlider"></div> 
+				<div id="voicePitchSlider"></div>
 
 				<hr/>
 			</div>

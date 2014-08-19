@@ -181,6 +181,11 @@ var pokerClock = {
 	        $( "#voiceRate" ).val( ui.value );
 	      }
 	    });
+	    $('#rateLabel').click(function(){
+	    	pokerClock.voiceOptions.rate = 1;
+	    	$( "#voiceRate" ).val( 1 );
+	    	$('#voiceRateSlider').slider({value: 1});
+	    });
 
 	    $( "#voiceRate" ).val(pokerClock.voiceOptions.rate);
 
@@ -193,6 +198,12 @@ var pokerClock = {
 	      	pokerClock.voiceOptions.pitch = ui.value;
 	        $( "#voicePitch" ).val( ui.value );
 	      }
+	    });
+
+	    $('#pitchLabel').click(function(){
+	    	pokerClock.voiceOptions.pitch = 1;
+	    	$( "#voicePitch" ).val( 1 );
+	    	$('#voicePitchSlider').slider({value: 1});
 	    });
 
 	    $( "#voicePitch" ).val(pokerClock.voiceOptions.pitch);
