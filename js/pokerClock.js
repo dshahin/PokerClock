@@ -102,8 +102,10 @@ var pokerClock = {
 		$("#pauseButton").toggle(pokerClock.pauseCountdown, pokerClock.startCountdown).click();
 		$("#soundButton").toggle(pokerClock.muteOn,pokerClock.muteOff).css({color:'green'});
 
-		$("#startRound").bind('click', function(){ pokerClock.startRound(pokerClock.currentRound) })
-						.attr({title:'restart current round'});
+		$("#startRound").bind('click', function(){ 
+			pokerClock.startRound(pokerClock.currentRound);
+		}).attr({title:'restart current round'});
+		
 		$(".nextRound").attr({title:'next round'})
 					   .bind('click', function(){
 			$('.timeLeft').removeClass('warning');
@@ -124,25 +126,22 @@ var pokerClock = {
 							}
 						});
 
-		$(".extra").toggle(
-			function(){
-				$(this).hide();
-			},
-			function(){
-				$(this).show();
-			}
-		).toggle().unbind('click');
+		// $(".extra").toggle(
+		// 	function(){
+		// 		$(this).hide();
+		// 	},
+		// 	function(){
+		// 		$(this).show();
+		// 	}
+		// ).toggle().unbind('click');
 
 		$("#structure").change(function(){
 			pokerClock.loadStructure($(this).val());
 		});
 
 
-		$("#rounds input[type='text']").live('change', pokerClock.updateRounds);
-		pokerClock.showStructures();
-
-		pokerClock.loadStructure(0);
-
+		//$("#rounds input[type='text']").live('change', pokerClock.updateRounds);
+		
 
 		$( "#tabs" ).tabs();
 
@@ -232,6 +231,10 @@ var pokerClock = {
 			}
 		}
 
+		pokerClock.showStructures();
+		pokerClock.loadStructure(0);
+		pokerClock.showCountdown();
+
 	},
 	cfg : {
 		debug: false
@@ -316,9 +319,13 @@ var pokerClock = {
 	startRound : function(roundIndex){
 		var round = pokerClock.rounds[roundIndex];
 		var nextRound = pokerClock.rounds[roundIndex + 1];
-
+		pokerClock.showCountdown();
+		chrome.tts.stop();
+		if (roundIndex === 0){
+			pokerClock.say('Welcome to the tournament.');
+		}
 		if(round.small > 0 && round.big > 0){
-			chrome.tts.stop();
+			
 			pokerClock.say('Blinds are ' +round.small +' dollar small blind. And '+ round.big + ' dollar big blind.');
 
 			if(round.ante > 0 ){
@@ -330,7 +337,7 @@ var pokerClock = {
 			pokerClock.say('Break time for ' + round.minutes + 'minutes.');
 		}
 
-		pokerClock.secondsLeft = (round.minutes * 60) ;
+		
 		$("#roundInfo").html(round.small + '/' + round.big);
 		if(round.ante > 0){ $("#roundInfo").append('(' + round.ante +')'); }
 		if(round.small == 0 && round.big == 0 && round.ante == 0){ $("#roundInfo").html('on break'); }
@@ -340,7 +347,9 @@ var pokerClock = {
 			if(nextRound.ante > 0){ $("#next").append('(' + nextRound.ante +')'); }
 			if(nextRound.small == 0 && nextRound.big == 0 && nextRound.ante == 0){ $("#next").html('next round: on break'); }
 		}
+
 		$('.timeLeft').effect('shake', {}, 100);
+		pokerClock.secondsLeft = (round.minutes * 60) + 1 ;
 	},
 	showRounds : function(){
 		$("#rounds tr.rounds").remove();
