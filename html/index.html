@@ -22,7 +22,11 @@
 				</li>
 
 				<li>
-					<a href="#settings">Structure</a>
+					<a href="#struct">Structure</a>
+				</li>
+
+				<li>
+					<a href="#settings">Settings</a>
 				</li>
 
 				<li>
@@ -99,7 +103,7 @@
 				</ul>
 </script>
 			</div>
-			<div id="settings" >
+			<div id="struct" >
 
 					<div id="structureBox" title="Rounds">
 
@@ -141,6 +145,25 @@
 					<button id="prevRound" class="prevRound ui-state-default ui-corner-left">&lt;</button> <button id="soundButton" class="ui-button ui-button-text-only ui-widget ui-state-default" title="alert on">♪</button> <button id="startRound" title="restart round" class="ui-state-default">restart round</button> <button id="pauseButton" title="start clock" class="ui-state-default"></button> <button id="nextRound" class="nextRound ui-state-default ui-corner-right">&gt;</button>
 				</div>
 
+			</div>
+
+			<div id="settings">
+				<h3>voice options</h3>
+				<button id="say">say</button><input id="quote" value="shuffle up and deal" type="text"/ placeholder="say something...">
+				<br/>
+				<label for="voiceName">Voice</label>
+				<select name="voiceName" id="voiceName">
+					<option value="Zardoz">Zardoz</option>
+					<option value="Princess">Princess</option>
+					<option value="Albert">Albert</option>
+					<option value="Agnes">Agnes</option>
+				</select>
+				
+				<br/>
+				<label for="voiceRate">Rate</label>
+				<input name="voiceRate" id="voiceRate" disabled="disabled" />
+				<div id="voiceRateSlider"></div> 
+				<hr/>
 			</div>
 
 

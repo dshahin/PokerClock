@@ -206,3 +206,13 @@ img.header{
 #tabs{
     height:100%;
 }
+#quote {
+    width:700px;
+}
+#voiceRateSlider{
+    width: 50%;
+    display: inline-block;
+}
+#voiceRate{
+    width: 50px;
+}

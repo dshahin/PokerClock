@@ -1,18 +1,28 @@
 $(function () { pokerClock.init(); });
 
 var pokerClock = {
-	voiceName : 'Zardox',
+	voiceOptions : {
+		voiceName : 'Zarvox',
+		enqueue: true,
+		pitch : 1,
+		rate : 1,
+		volume: 1
+	},
+	voiceNames :['Zardoz','Agnes'],
+	say : function(quote){
+		if(!pokerClock.mute){
+			chrome.tts.speak(quote, pokerClock.voiceOptions);
+		}
+	},
 	init : function(){
-		var voiceName = 'Good News';
+
 		chrome.tts.getVoices(
           function(voices) {
+          	pokerClock.voiceNames = [];
             for (var i = 0; i < voices.length; i++) {
-              console.log('Voice ' + i + ':');
-              console.log('  name: ' + voices[i].voiceName);
-              console.log('  lang: ' + voices[i].lang);
-              console.log('  gender: ' + voices[i].gender);
-              console.log('  extension id: ' + voices[i].extensionId);
-              console.log('  event types: ' + voices[i].eventTypes);
+              var vName = voices[i].voiceName;
+              pokerClock.voiceNames.push(vName);
+              $('#voiceName').append('<option value="' + vName + '">' + vName + '</option>');
             }
           });
 
@@ -120,39 +130,22 @@ var pokerClock = {
 			}
 		).toggle().unbind('click');
 
-		// $(".koButton").live('click', function(){
-		// 	$(this).parent().parent().parent().parent().parent().parent().toggleClass('ko').find("input").toggleClass('ko');
-		// 	var playerName = $(this).parent().parent().parent().parent().parent().parent().find("input").val();
-		// 	pokerClock.logEvent(playerName +' knocked out' );
-
-		// 	var activePlayers = $("tr.player").not("tr.ko").length;
-		// 	pokerClock.updatePlayers();
-		// 	if (activePlayers == 1){
-		// 		$("tr.player").not("tr.ko").find("input").addClass('winner');
-		// 		var winner = $("tr.player").not("tr.ko").find("input").val();
-		// 		pokerClock.alertPlayers(winner + ' has won the tournament!');
-		// 		pokerClock.logEvent(winner + ' has won the tournament!');
-		// 	}
-
-		// });
 		$("#structure").change(function(){
 			pokerClock.loadStructure($(this).val());
 		});
 		$("#payStructure").change(function(){
 			pokerClock.loadPayStructure($(this).val());
 		});
-		// $("#addPayout").click( pokerClock.addPayout);
-		// $("#delPayout").click( pokerClock.delPayout);
+
 		$("#rounds input[type='text']").live('change', pokerClock.updateRounds);
 		$("#players input[type='text']").live('change', pokerClock.updatePlayers);
 		pokerClock.showStructures();
-		//pokerClock.showPayStructures();
-		//initialize default structure
+
 		pokerClock.loadStructure(0);
 		pokerClock.loadPayStructure(0);
 
 		$("#payouts input.poPercent").live('change', pokerClock.calculatePayoutDollars).change();
-		//$("#players").tablesorter();
+
 		$( "#tabs" ).tabs();
 
 		$('button').live('mouseover',function(){
@@ -176,10 +169,33 @@ var pokerClock = {
 			$(document).bind('keydown', bindKeys);
 		});
 
+		$('#voiceName').change(function(){
+			pokerClock.voiceOptions.voiceName = $(this).val();
+		});
+
+		$('#voiceRateSlider').slider({
+	      value:1,
+	      min: 0.1,
+	      max: 4,
+	      step: 0.1,
+	      slide: function( event, ui ) {
+	      	pokerClock.voiceOptions.rate = ui.value;
+	        $( "#voiceRate" ).val( ui.value );
+	      }
+	    });
+
+	    $( "#voiceRate" ).val(1);
+
+		$('#say').button().click(function(){
+			chrome.tts.stop();
+			var quote = $('#quote').val();
+			if(quote) pokerClock.say(quote);
+		});
+
 		function bindKeys(e){
 			var key = e.keyCode;
 			console.log('key', key);
-			if(key === 32){
+			if(key === 38 || key === 40){
 				//e.preventDefault();
 				$('#pauseButton').click();
 				return true;
@@ -234,10 +250,11 @@ var pokerClock = {
 		$(this).html('pause');
 	},
 	startCountdown : function(){
-		if(!pokerClock.mute){
-			pokerClock.pop.play();
-			chrome.tts.speak('Clock running.', {'enqueue': true, voiceName:pokerClock.voiceName})
-		};
+
+		pokerClock.pop.play();
+		chrome.tts.stop();
+		pokerClock.say('Clock running.');
+
 		pokerClock.countdownInterval = setInterval( function(){pokerClock.showCountdown()}, 1000);
 		$(".timeLeft").removeClass('paused');
 		$(this).html('pause clock').attr({'title':'pause clock'});
@@ -245,10 +262,9 @@ var pokerClock = {
 	},
 	pauseCountdown : function(){
 
-		if(!pokerClock.mute){
-			pokerClock.pop.play();
-			chrome.tts.speak('Clock paused.', {'enqueue': true})
-		};
+		pokerClock.pop.play();
+		chrome.tts.stop();
+		pokerClock.say('Clock paused.');
 		pokerClock.logEvent('clock paused');
 		clearInterval(pokerClock.countdownInterval);
 		$(".timeLeft").addClass('paused');
@@ -279,21 +295,19 @@ var pokerClock = {
 		var round = pokerClock.rounds[roundIndex];
 		var nextRound = pokerClock.rounds[roundIndex + 1];
 
-		if(!pokerClock.mute){
+		if(round.small > 0 && round.big > 0){
+			chrome.tts.stop();
+			pokerClock.say('Blinds are ' +round.small +' dollar small blind. And '+ round.big + ' dollar big blind.');
 
-			if(round.small > 0 && round.big > 0){
-
-				chrome.tts.speak('Blinds are ' +round.small +' dollar small blind. And '+ round.big + ' dollar big blind.', {'enqueue': false, voiceName:pokerClock.voiceName});
-
-				if(round.ante > 0 ){
-					chrome.tts.speak('There is a '+ round.ante + ' dollar ante.', {'enqueue': true, voiceName:pokerClock.voiceName});
-				}
-				chrome.tts.speak('Shuffle up and deal!', {'enqueue': true, voiceName:pokerClock.voiceName})
-			}else{
-				chrome.tts.speak('Break time for ' + round.minutes + 'minutes.');
+			if(round.ante > 0 ){
+				pokerClock.say('There is a '+ round.ante + ' dollar ante.');
 			}
-
+			pokerClock.say($('#quote').val());
+		}else{
+			chrome.tts.stop();
+			pokerClock.say('Break time for ' + round.minutes + 'minutes.');
 		}
+
 		pokerClock.secondsLeft = (round.minutes * 60) ;
 		$("#roundInfo").html(round.small + '/' + round.big);
 		if(round.ante > 0){ $("#roundInfo").append('(' + round.ante +')'); }
@@ -364,7 +378,7 @@ var pokerClock = {
 				if(!pokerClock.mute){
 					pokerClock.alert.play();
 					setTimeout(function(){
-						chrome.tts.speak('One minute left in round', {voiceName:pokerClock.voiceName});
+						pokerClock.say('One minute left in round');
 					}, 3000);
 				};
 				$('.timeLeft').effect('pulsate',{times:8},'slow').addClass('warning');
@@ -519,20 +533,20 @@ var pokerClock = {
 		}
 		$(".poPercent").change();
 	},
-	addPayout : function(){
-		if (pokerClock.payouts.length < pokerClock.players.length ){
-			pokerClock.payouts.push(pokerClock.defaultPayout);
-			pokerClock.showPayouts();
-			$(".poPercent").change();
-		}
-	},
-	delPayout : function(){
-		if (pokerClock.payouts.length > 1){
-			pokerClock.payouts.pop();
-			pokerClock.showPayouts();
-			$(".poPercent").change();
-		}
-	},
+	// addPayout : function(){
+	// 	if (pokerClock.payouts.length < pokerClock.players.length ){
+	// 		pokerClock.payouts.push(pokerClock.defaultPayout);
+	// 		pokerClock.showPayouts();
+	// 		$(".poPercent").change();
+	// 	}
+	// },
+	// delPayout : function(){
+	// 	if (pokerClock.payouts.length > 1){
+	// 		pokerClock.payouts.pop();
+	// 		pokerClock.showPayouts();
+	// 		$(".poPercent").change();
+	// 	}
+	// },
 	calculatePayoutDollars : function(){
 		var pot = parseFloat($("#pot").html());
 		var percent = $(this).attr('value') * .01;
@@ -559,14 +573,14 @@ var pokerClock = {
 		pokerClock.rounds = pokerClock.structures[sIndex].rounds;
 		pokerClock.currentRound = 0;
 		pokerClock.startRound(pokerClock.currentRound);
-		pokerClock.showPayouts();
+		//pokerClock.showPayouts();
 		pokerClock.showRounds();
 	},
 
 	loadPayStructure : function(sIndex) {
 		pokerClock.payouts = pokerClock.payStructures[sIndex].payouts;
 		 //	alert(sIndex);
-		pokerClock.showPayouts();
+		//pokerClock.showPayouts();
 	},
 	showPayStructures : function(){
 		for(i in pokerClock.payStructures){
